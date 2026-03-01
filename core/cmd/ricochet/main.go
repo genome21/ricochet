@@ -26,6 +26,8 @@ import (
 	"github.com/igoryan-dao/ricochet/internal/prompts"
 	"github.com/igoryan-dao/ricochet/internal/protocol"
 	"github.com/igoryan-dao/ricochet/internal/server"
+	"github.com/igoryan-dao/ricochet/internal/state"
+	"github.com/igoryan-dao/ricochet/internal/telegram"
 	"github.com/igoryan-dao/ricochet/internal/tui"
 	"github.com/igoryan-dao/ricochet/internal/workflow"
 	"github.com/mattn/go-isatty"
@@ -517,8 +519,27 @@ func runServerMode(ctx context.Context, cwd, port string) {
 // runMCPMode runs as MCP server (for Claude Code, Cursor, etc.)
 func runMCPMode(ctx context.Context) {
 	log.Println("Starting in MCP mode...")
-	log.Println("MCP server not yet integrated into unified binary")
-	<-ctx.Done()
+
+	stateMgr, err := state.NewManager()
+	if err != nil {
+		log.Printf("Warning: Failed to create state manager: %v", err)
+	}
+
+	var tgBot *telegram.Bot
+	if liveModeConfig.TelegramToken != "" {
+		tgBot, err = telegram.New(liveModeConfig.TelegramToken, liveModeConfig.AllowedUserIDs, stateMgr)
+		if err != nil {
+			log.Fatalf("Failed to create telegram bot: %v", err)
+		}
+	} else {
+		log.Println("Warning: Telegram token not provided, Telegram integration will not work")
+	}
+
+	mcpServer := mcp.NewServer(tgBot, nil, stateMgr)
+
+	if err := mcpServer.Run(ctx); err != nil {
+		log.Fatalf("MCP Server error: %v", err)
+	}
 }
 
 func sendMessage(msg interface{}) {
