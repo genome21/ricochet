@@ -215,6 +215,7 @@ func main() {
 	port := "5555"
 	isStdio := false
 	forceTui := false
+	isMcp := false
 
 	for i := 0; i < len(args); i++ {
 		if args[i] == "--server" {
@@ -226,6 +227,8 @@ func main() {
 			isStdio = true
 		} else if args[i] == "--tui" {
 			forceTui = true
+		} else if args[i] == "--mcp" {
+			isMcp = true
 		}
 	}
 
@@ -233,6 +236,8 @@ func main() {
 		runServerMode(ctx, cwd, port)
 	} else if isStdio {
 		runStdioMode(ctx, cwd)
+	} else if isMcp {
+		runMCPMode(ctx)
 	} else if forceTui || (len(args) == 0 && isatty.IsTerminal(os.Stdout.Fd()) && isatty.IsTerminal(os.Stdin.Fd())) {
 		// Default to Interactive Mode if TTY detected OR forced
 		runInteractiveMode(ctx, cwd)
