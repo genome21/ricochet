@@ -32,6 +32,7 @@ Don't be tied to your desk. Toggle "Live Mode" to connect Ricochet to a Telegram
 ### 3. Tooling & Integration
 *   **CLI & VS Code**: Full feature parity between the Visual Studio Code extension and the standalone Terminal User Interface (TUI).
 *   **MCP Support**: Fully compatible with the **Model Context Protocol**. Connect any MCP server (GitHub, Postgres, Filesystem) to extend Ricochet's capabilities.
+*   **Ricochet as an MCP Server**: Ricochet can be run as an MCP server. By using `ricochet --mcp` as a command in IDEs like Google Antigravity or Cursor, you can integrate Ricochet directly. In this mode, Ricochet bridges your IDE directly to Telegram, allowing you to chat, prompt, review, and approve tasks directly from Telegram without staying stuck at your computer.
 *   **Cross-Platform**: Runs natively on macOS, Linux, and Windows.
 *   **Multi-Provider**: Bring Your Own Key (BYOK). Supports Anthropic (Claude), OpenAI (GPT-4), Google (Gemini), DeepSeek, and OpenRouter.
 
